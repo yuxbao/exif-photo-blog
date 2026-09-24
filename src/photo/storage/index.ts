@@ -183,7 +183,7 @@ export const getDataUrlsForPhotos = async (
         return { id, urlData: nextImageUrlData };
       }
     }))
-    .then(urls => urls.every(({ urlData }) => Boolean(urlData))
-      ? urls as { id: string, urlData: string }[]
-      // If any url is undefined, return an empty array
-      : []);
+    .then(urls => urls.filter(
+      (photo): photo is { id: string, urlData: string } =>
+        Boolean(photo.urlData),
+    ));

@@ -43,9 +43,6 @@ export default async function ImagePhotoGrid({
   else if (length >= 5) { count = 5; }
   else if (length >= 4) { count = 4; }
 
-  const hasSplitLayout = count === 3;
-  const hasFiveLayout = count === 5;
-
   const nextImageWidth: NextImageSize = count <= 2
     ? width ?? 1080
     : 640;
@@ -54,6 +51,18 @@ export default async function ImagePhotoGrid({
     ? 'lg'
     : 'md';
 
+  const totalWidth = width ?? widthArbitrary;
+  const photoUrls = await getDataUrlsForPhotos(
+    photos,
+    optimizedSuffix,
+    nextImageWidth,
+    IS_PREVIEW,
+  );
+
+  count = Math.min(count, photoUrls.length);
+  const hasSplitLayout = count === 3;
+  const hasFiveLayout = count === 5;
+
   let rows = 1;
   if (count > 12) { rows = 4; }
   else if (count > 6) { rows = 3; }
@@ -61,7 +70,6 @@ export default async function ImagePhotoGrid({
 
   const imagesPerRow = Math.round(count / rows);
 
-  const totalWidth = width ?? widthArbitrary;
   // ~1px at hover width (300), so OG images keep a similar hairline
   const gap = gapProp === false
     ? 0
@@ -75,13 +83,6 @@ export default async function ImagePhotoGrid({
   const [fiveCellHeight, fiveCellHeightLast] = splitSize(height, gap, 2);
   const [splitLeftWidth, splitRightWidth] = columnWidths;
   const [splitTopHeight, splitBottomHeight] = rowHeights;
-
-  const photoUrls = await getDataUrlsForPhotos(
-    photos,
-    optimizedSuffix,
-    nextImageWidth,
-    IS_PREVIEW,
-  );
 
   const renderPhoto = (
     { id, urlData }: typeof photoUrls[number],

@@ -41,7 +41,7 @@ export default function PhotosLarge({
         <PhotoLarge
           key={photo.id}
           photo={photo}
-          priority={index <= 1}
+          priority={index === 0}
           prefetchRelatedLinks={prefetchFirstPhotoLinks && index === 0}
           revalidatePhoto={revalidatePhoto}
           shouldZoomOnFKeydown={false}

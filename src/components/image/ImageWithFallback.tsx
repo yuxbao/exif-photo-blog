@@ -14,12 +14,16 @@ export default function ImageWithFallback({
   blurDataURL,
   blurCompatibilityLevel = 'low',
   priority,
+  fallbackSrc,
+  unoptimized,
+  src,
   ...props
 }: ImageProps & {
   ref?: RefObject<HTMLImageElement | null>
   blurCompatibilityLevel?: 'none' | 'low' | 'high'
   classNameImage?: string
   priority?: boolean
+  fallbackSrc?: ImageProps['src']
 }) {
   const ref = useRef<HTMLImageElement>(null);
 
@@ -27,11 +31,19 @@ export default function ImageWithFallback({
 
   const [isLoading, setIsLoading] = useState(true);
   const [didError, setDidError] = useState(false);
+  const [hasFallenBack, setHasFallenBack] = useState(false);
   const [fadeFallbackTransition, setFadeFallbackTransition] =
     useState(!hasLoadedWithAnimations);
 
   const onLoad = useCallback(() => setIsLoading(false), []);
-  const onError = useCallback(() => setDidError(true), []);
+  const onError = useCallback(() => {
+    if (fallbackSrc && !hasFallenBack) {
+      setHasFallenBack(true);
+      setIsLoading(true);
+    } else {
+      setDidError(true);
+    }
+  }, [fallbackSrc, hasFallenBack]);
 
   useEffect(() => {
     if (
@@ -61,6 +73,8 @@ export default function ImageWithFallback({
     >
       <Image ref={refProp ?? ref} {...{
         ...props,
+        src: hasFallenBack ? fallbackSrc! : src,
+        unoptimized: hasFallenBack ? false : unoptimized,
         priority,
         className: classNameImage,
         onLoad,

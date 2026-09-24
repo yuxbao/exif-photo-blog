@@ -139,13 +139,6 @@ const getTestOptimizedPhotoUrl = (url: string) =>
 export const doesPhotoUrlHaveOptimizedFiles = async (url: string) =>
   fetch(getTestOptimizedPhotoUrl(url)).then(res => res.ok);
 
-export const doesPhotoUrlHaveAllOptimizedFiles = async (url: string) => {
-  const { urlBase, fileNameBase } = getFileNamePartsFromStorageUrl(url);
-  return Promise.all(getOptimizedPhotoFileMeta(fileNameBase)
-    .map(({ fileName }) => fetch(`${urlBase}/${fileName}`).then(res => res.ok)))
-    .then(results => results.every(Boolean));
-};
-
 export const getStorageUrlsForPhoto = async ({ url }: Photo) => {
   const getSortScoreForUrl = (url: string) => {
     const { fileNameBase } = getFileNamePartsFromStorageUrl(url);

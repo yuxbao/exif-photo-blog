@@ -15,7 +15,6 @@ import useVisibility from '@/utility/useVisibility';
 import LinkWithStatus from '@/components/LinkWithStatus';
 import Spinner from '@/components/Spinner';
 import PhotoColors from './color/PhotoColors';
-import { getOptimizedPhotoUrlForSuffix } from './storage';
 
 export default function PhotoMedium({
   photo,
@@ -73,9 +72,7 @@ export default function PhotoMedium({
               />
             </div>}
           <ImageMedium
-            src={getOptimizedPhotoUrlForSuffix(photo.url, 'md')}
-            fallbackSrc={photo.url}
-            unoptimized
+            src={photo.url}
             aspectRatio={photo.aspectRatio}
             blurDataURL={photo.blurData}
             blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}

@@ -58,7 +58,6 @@ import { useEditTitlesState } from '@/admin/edit-titles/EditTitlesState';
 import { DATA_KEY_PHOTO_LARGE } from '@/admin/edit-titles/EditTitlesProvider';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import PlaceEntity from '@/place/PlaceEntity';
-import { getOptimizedPhotoUrlForSuffix } from './storage';
 
 export default function PhotoLarge({
   photo,
@@ -261,9 +260,7 @@ export default function PhotoLarge({
           classNameImage={clsx(arePhotosMatted &&
             'object-contain w-full h-full')}
           alt={altTextForPhoto(photo)}
-          src={getOptimizedPhotoUrlForSuffix(photo.url, 'lg')}
-          fallbackSrc={photo.url}
-          unoptimized
+          src={photo.url}
           aspectRatio={photo.aspectRatio}
           blurDataURL={photo.blurData}
           blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}

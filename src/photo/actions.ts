@@ -92,10 +92,7 @@ import {
   upgradeTagToAlbum,
 } from '@/album/server';
 import { addPhotoAlbumIds } from '@/album/query';
-import {
-  doesPhotoUrlHaveAllOptimizedFiles,
-  getStorageUrlsForPhoto,
-} from './storage';
+import { getStorageUrlsForPhoto } from './storage';
 import type { VisibilityValue } from './visibility';
 import {
   COMMAND_K_PHOTO_LIMIT,
@@ -727,39 +724,6 @@ export const syncPhotosAction = async (photosToSync: {
     }
     revalidateAllKeysAndPaths();
   });
-
-export const backfillOptimizedPhotosAction = async (
-  offset: number,
-  limit = 2,
-) => runAuthenticatedAdminServerAction(async () => {
-  const photos = await getPhotos({
-    hidden: 'include',
-    offset,
-    limit,
-    sortBy: 'createdAt',
-  });
-
-  let created = 0;
-  let failed = 0;
-  for (const photo of photos) {
-    try {
-      if (!await doesPhotoUrlHaveAllOptimizedFiles(photo.url)) {
-        await storeOptimizedPhotosForUrl(photo.url);
-        created++;
-      }
-    } catch (error) {
-      failed++;
-      console.error(`Failed to optimize photo ${photo.id}`, error);
-    }
-  }
-
-  return {
-    processed: photos.length,
-    created,
-    failed,
-    hasMore: photos.length === limit,
-  };
-});
 
 export const clearCacheAction = async () =>
   runAuthenticatedAdminServerAction(revalidateAllKeysAndPaths);

@@ -17,7 +17,6 @@ import IconBroom from '@/components/icons/IconBroom';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
 import { useAppText } from '@/i18n/state/client';
 import SyncColorButton from '@/photo/color/SyncColorButton';
-import BackfillOptimizedPhotosButton from './BackfillOptimizedPhotosButton';
 
 export default function AdminPhotosClient({
   photos,
@@ -62,8 +61,6 @@ export default function AdminPhotosClient({
             </div>
             {debugColorData &&
               <SyncColorButton />}
-            {photosCount > 0 &&
-              <BackfillOptimizedPhotosButton photosCount={photosCount} />}
             {photosCountNeedsSync > 0 &&
               <PathLoaderButton
                 path={PATH_ADMIN_PHOTOS_UPDATES}
